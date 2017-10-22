@@ -45,6 +45,7 @@ class Meizitu():
             with open('{}'.format(str(urlparse.urlsplit(i).path.replace("/","_"))),'wb') as f:
                 f.write(response.getvalue())
                 f.close()
+            del url_picture_exist.index(i)
         self.url = self.url_list_exist[0]
         del self.url_list_exist[0]
 
