@@ -9,6 +9,7 @@ import StringIO
 import re
 import cookielib
 import requests
+import urlparse
 
 '''
 流程：   进入一个url==》得到url的content==》识别url外链和图片==》下载图片==》进入url_list的第一个页面并删除本身==》循环
@@ -21,7 +22,6 @@ class Meizitu():
         self.url_list_exist = [] #用列表来判别某url是否已经检测到过
         self.url_picture = []  #本页面中的图片
         self.url_picture_exist = [] #是否检测过的图片
-        self.num = 0     #记录下载的文件数
         self.headers ={
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36',
             'Cookie': '__jsluid=54d506fa7bd1d5ab966d0a8dbc1ba2c8',
@@ -42,8 +42,7 @@ class Meizitu():
     def Download_Picture(self):
         for i in self.url_picture_exist:
             response = StringIO.StringIO(requests.get(i,headers=self.headers).content)
-            with open('{}.jpg'.format(str(self.num)),'wb') as f:
-                self.num+=1
+            with open('{}'.format(str(urlparse.urlsplit(i).path.replace("/","_"))),'wb') as f:
                 f.write(response.getvalue())
                 f.close()
         self.url = self.url_list_exist[0]
